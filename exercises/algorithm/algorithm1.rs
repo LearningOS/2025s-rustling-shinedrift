@@ -2,11 +2,10 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
-use std::vec::*;
+use std::{clone, vec::*};
 
 #[derive(Debug)]
 struct Node<T> {
@@ -29,13 +28,13 @@ struct LinkedList<T> {
     end: Option<NonNull<Node<T>>>,
 }
 
-impl<T> Default for LinkedList<T> {
+impl<T: std::cmp::PartialOrd + Clone> Default for LinkedList<T> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<T> LinkedList<T> {
+impl<T: std::cmp::PartialOrd + Clone> LinkedList<T> {
     pub fn new() -> Self {
         Self {
             length: 0,
@@ -69,14 +68,39 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+	pub fn merge(mut list_a:LinkedList<T>,mut list_b:LinkedList<T>) -> Self
 	{
 		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		// 初始化一个链表
+        let mut merge_list = LinkedList::<T>::new();
+        // 获取两个要处理链表的头节点，用于遍历
+        let mut cur_a = list_a.start;
+        let mut cur_b = list_b.start;
+
+        while let (Some(node_a), Some(node_b)) = (cur_a, cur_b) {
+            let val_a = unsafe { &(*node_a.as_ptr()).val };
+            let val_b = unsafe { &(*node_b.as_ptr()).val };
+
+            // 比较链表对应值的大小，较小值作为新节点插入到链表中
+            if val_a <= val_b {
+                merge_list.add(val_a.clone());
+                cur_a = unsafe { (*node_a.as_ptr()).next };
+            } else {
+                merge_list.add(val_b.clone());
+                cur_b = unsafe { (*node_b.as_ptr()).next };
+            }
         }
+        while let Some(node_a) = cur_a {
+            let val_a = unsafe { &(*node_a.as_ptr()).val };
+            merge_list.add(val_a.clone());
+            cur_a = unsafe { (*node_a.as_ptr()).next };
+        }
+        while let Some(node_b) = cur_b {
+            let val_b = unsafe { &(*node_b.as_ptr()).val };
+            merge_list.add(val_b.clone());
+            cur_b = unsafe { (*node_b.as_ptr()).next };
+        }
+        merge_list
 	}
 }
 
