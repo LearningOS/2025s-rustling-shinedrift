@@ -18,7 +18,8 @@ fn main() {
     ];
     println!("My array! Here it is: {:?}", my_arr);
 
-    vec![1, 2, 3, 4, 5].resize(0, 5);
+    //vec![1, 2, 3, 4, 5].resize(0, 5);
+    let my_empty_vec = ();
     println!("This Vec is empty, see? {:?}", ());
 
     let mut value_a = 45;
