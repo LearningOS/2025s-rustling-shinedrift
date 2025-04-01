@@ -2,7 +2,7 @@
 //!
 //! You should modify this file to make both exercises pass.
 
-use core::time;
+//use core::time;
 
 fn main() {
     // In tests7, we should set up an environment variable
